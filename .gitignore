@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+dist/
+
+# uv
+.uv/
+uv.lock
+
+# Generated output
+site/
+
+# Data (committed for portability; ignore large downloads)
+data/
+
+# Editor
+.DS_Store
+.idea/
+.vscode/
