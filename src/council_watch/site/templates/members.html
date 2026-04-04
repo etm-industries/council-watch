@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Council Members | {{ site_title }}{% endblock %}
+{% block description %}Austin City Council members and their voting records.{% endblock %}
+
+{% block content %}
+<h1>Council Members</h1>
+{% if members %}
+<table>
+  <thead>
+    <tr><th>Name</th><th>Title / District</th></tr>
+  </thead>
+  <tbody>
+    {% for m in members %}
+    <tr>
+      <td><a href="{{ base_url }}/members/{{ m.slug }}/">{{ m.name }}</a></td>
+      <td>{{ m.title }}{% if m.district %} — {{ m.district }}{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+  <p>No council member data loaded yet.</p>
+{% endif %}
+{% endblock %}

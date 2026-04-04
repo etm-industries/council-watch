@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{{ site_title }} — Austin City Council Tracker{% endblock %}
+{% block description %}Plain-language coverage of Austin City Council meetings, votes, and decisions.{% endblock %}
+
+{% block content %}
+<h1>Austin City Council Watch</h1>
+<p class="meta">Plain-language tracking of what Austin's city council is doing and how they're voting.</p>
+
+{% if stats %}
+<div class="stats-row">
+  <div class="stat">
+    <span class="number">{{ stats.total_meetings }}</span>
+    <span class="label">Meetings tracked</span>
+  </div>
+  <div class="stat">
+    <span class="number">{{ stats.total_votes }}</span>
+    <span class="label">Vote records</span>
+  </div>
+  {% if stats.total_votes > 0 %}
+  <div class="stat">
+    <span class="number">{{ "%.0f"|format(stats.unanimous_votes / stats.total_votes * 100) }}%</span>
+    <span class="label">Unanimous votes</span>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+<h2>Recent Meetings</h2>
+{% if recent_meetings %}
+  {% for meeting in recent_meetings %}
+  <div class="meeting-card">
+    <h3>
+      <a href="{{ base_url }}/meetings/{{ meeting.date }}/">
+        {{ meeting.body or "City Council" }} — {{ meeting.date }}
+      </a>
+    </h3>
+    <div class="meta">
+      {{ meeting.date }}
+      {% if meeting.time %} &middot; {{ meeting.time }}{% endif %}
+      {% if meeting.location %} &middot; {{ meeting.location }}{% endif %}
+      {% if meeting.agenda_status %} &middot; Agenda: {{ meeting.agenda_status }}{% endif %}
+    </div>
+    {% if meeting.agenda_url %}
+    <a href="{{ meeting.agenda_url }}">Download agenda PDF</a>
+    {% endif %}
+    {% if meeting.minutes_url %}
+    &nbsp;&middot;&nbsp;<a href="{{ meeting.minutes_url }}">Download minutes PDF</a>
+    {% endif %}
+  </div>
+  {% endfor %}
+{% else %}
+  <p>No meetings loaded yet. Run the ingestion script to populate data.</p>
+{% endif %}
+{% endblock %}

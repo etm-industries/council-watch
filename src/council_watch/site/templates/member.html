@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ member.name }} | {{ site_title }}{% endblock %}
+{% block description %}Voting record for Austin City Council member {{ member.name }}.{% endblock %}
+
+{% block content %}
+<h1>{{ member.name }}</h1>
+<p class="meta">{{ member.title }}{% if member.district %} &middot; {{ member.district }}{% endif %}</p>
+
+{% if vote_summary.total > 0 %}
+<h2>Voting Summary</h2>
+<div style="display: flex; gap: 1.5rem; margin-bottom: 1rem;">
+  {% for vote_type, count in vote_summary.counts.items() %}
+  <div>
+    <span class="badge {% if vote_type == 'Aye' %}badge-aye{% elif vote_type == 'Nay' %}badge-nay{% elif 'absent' in vote_type|lower %}badge-absent{% endif %}" style="font-size:1rem; padding: 4px 10px;">
+      {{ vote_type }}: {{ count }}
+    </span>
+  </div>
+  {% endfor %}
+  <div class="meta" style="margin-top:4px;">Total: {{ vote_summary.total }} votes</div>
+</div>
+{% endif %}
+
+{% if member_votes %}
+<h2>Recent Votes</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Item</th>
+      <th>Description</th>
+      <th>Action</th>
+      <th>Vote</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for v in member_votes %}
+    <tr>
+      <td><a href="{{ base_url }}/meetings/{{ v.date }}/">{{ v.date }}</a></td>
+      <td>{{ v.item_number }}</td>
+      <td>{{ v.item_description[:80] if v.item_description else "" }}</td>
+      <td>{{ v.action_taken }}</td>
+      <td>
+        <span class="badge {% if v.vote == 'Aye' %}badge-aye{% elif v.vote == 'Nay' %}badge-nay{% elif 'absent' in v.vote|lower %}badge-absent{% endif %}">
+          {{ v.vote }}
+        </span>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+  <p>No votes on record for this council member in the current data window.</p>
+{% endif %}
+
+<p style="margin-top:2rem;"><a href="{{ base_url }}/members/">&larr; All members</a></p>
+{% endblock %}

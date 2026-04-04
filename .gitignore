@@ -9,8 +9,8 @@ dist/
 .uv/
 uv.lock
 
-# Generated output
-site/
+# Generated output (root-level only, not src/council_watch/site/)
+/site/
 
 # Data (committed for portability; ignore large downloads)
 data/

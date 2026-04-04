@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}{{ meeting.body or "City Council" }} — {{ meeting.date }} | {{ site_title }}{% endblock %}
+{% block description %}Austin City Council meeting on {{ meeting.date }}: agenda items and votes.{% endblock %}
+
+{% block content %}
+<h1>{{ meeting.body or "City Council" }}</h1>
+<p class="meta">
+  {{ meeting.date }}
+  {% if meeting.time %} &middot; {{ meeting.time }}{% endif %}
+  {% if meeting.location %} &middot; {{ meeting.location }}{% endif %}
+</p>
+
+{% if meeting.agenda_url or meeting.minutes_url %}
+<p>
+  {% if meeting.agenda_url %}<a href="{{ meeting.agenda_url }}">Agenda PDF</a>{% endif %}
+  {% if meeting.minutes_url %}&nbsp;&middot;&nbsp;<a href="{{ meeting.minutes_url }}">Minutes PDF</a>{% endif %}
+  &nbsp;&middot;&nbsp;<a href="{{ meeting.legistar_url }}">View on Legistar</a>
+</p>
+{% endif %}
+
+{% if agenda_items %}
+<h2>Agenda Items</h2>
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Sponsor</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in agenda_items %}
+    <tr>
+      <td>{{ item.item_number }}</td>
+      <td>{{ item.request_type or item.item_type }}</td>
+      <td>
+        {{ item.posting_language[:200] if item.posting_language else "" }}
+        {% if item.tags %}
+          <br>
+          {% for tag in item.tags %}
+            <span class="badge">{{ tag }}</span>
+          {% endfor %}
+        {% endif %}
+      </td>
+      <td>{{ item.sponsor }}</td>
+      <td>{{ item.current_status or item.status }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% if votes %}
+<h2>Votes ({{ votes|length }} items)</h2>
+{% for record in votes %}
+<div style="margin-bottom: 1.5rem;">
+  <h3>Item {{ record.item_number }}: {{ record.item_description[:100] if record.item_description else "(no description)" }}</h3>
+  <p class="meta">Action: <strong>{{ record.action_taken or "Unknown" }}</strong></p>
+  {% if record.votes %}
+  <table>
+    <thead>
+      <tr><th>Council Member</th><th>District</th><th>Vote</th></tr>
+    </thead>
+    <tbody>
+      {% for v in record.votes %}
+      <tr>
+        <td><a href="{{ base_url }}/members/{{ v.name | lower | replace(' ', '-') | replace('.', '') }}/">{{ v.name }}</a></td>
+        <td>{{ v.district }}</td>
+        <td>
+          <span class="badge {% if v.vote == 'Aye' %}badge-aye{% elif v.vote == 'Nay' %}badge-nay{% elif 'absent' in v.vote|lower %}badge-absent{% endif %}">
+            {{ v.vote }}
+          </span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+{% endfor %}
+{% endif %}
+
+{% if not agenda_items and not votes %}
+<p class="meta">No detailed vote or agenda data available for this meeting date.</p>
+{% endif %}
+
+<p style="margin-top:2rem;"><a href="{{ base_url }}/">&larr; Back to all meetings</a></p>
+{% endblock %}

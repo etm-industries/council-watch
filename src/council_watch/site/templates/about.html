@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}About | {{ site_title }}{% endblock %}
+{% block description %}About Council Watch Austin — how it works, data sources, and methodology.{% endblock %}
+
+{% block content %}
+<h1>About Council Watch Austin</h1>
+
+<p>
+  Council Watch Austin tracks Austin City Council activity and publishes plain-language
+  coverage of agendas, votes, and decisions. Our goal is to make it easier for residents
+  to understand what their council is doing.
+</p>
+
+<h2>What We Track</h2>
+<ul>
+  <li>Every City Council and committee meeting</li>
+  <li>How each council member votes on every item</li>
+  <li>Agenda items including resolutions, ordinances, and contracts</li>
+  <li>Historical patterns in voting behavior</li>
+</ul>
+
+<h2>Data Sources</h2>
+<table>
+  <thead>
+    <tr><th>Dataset</th><th>Source</th><th>Updated</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Meeting agendas &amp; minutes</td>
+      <td><a href="https://austintexas.legistar.com">Austin Legistar</a></td>
+      <td>Daily</td>
+    </tr>
+    <tr>
+      <td>Council voting records</td>
+      <td><a href="https://data.austintexas.gov/resource/3c89-i35a">Austin Open Data Portal</a></td>
+      <td>Daily</td>
+    </tr>
+    <tr>
+      <td>Agenda items (2024–present)</td>
+      <td><a href="https://data.austintexas.gov/resource/sich-49ay">Austin Open Data Portal</a></td>
+      <td>Daily</td>
+    </tr>
+    <tr>
+      <td>Agenda items (2015–2024)</td>
+      <td><a href="https://data.austintexas.gov/resource/wsf2-3rpw">Austin Open Data Portal</a></td>
+      <td>Archive</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Methodology</h2>
+<p>
+  Data is fetched daily via public APIs and stored as structured JSON. The site is statically
+  generated from that data — no database, no dynamic server. Source code and raw data are
+  available on GitHub.
+</p>
+
+<h2>Coverage Philosophy</h2>
+<p>
+  We don't compete on breaking news. Our focus is on patterns: who votes together, what kinds
+  of items pass unanimously versus contentiously, and where the gaps are between what council
+  members say and how they vote.
+</p>
+{% endblock %}
